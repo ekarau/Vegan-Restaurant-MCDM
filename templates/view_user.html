@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Detail</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 10px;
+            float: left;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 5px 10px;
+            text-align: center;
+        }
+        .section {
+            clear: both;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h2>User: {{ user['name'] }} (ID: {{ user['id'] }})</h2>
+
+    <form action="{{ url_for('update_user_info', user_id=user['id']) }}" method="post">
+        <p>
+            <strong>Experience:</strong>
+            <select name="experience_label">
+                {% for label in t2nn_labels %}
+                    <option value="{{ label }}" {% if user['experience_label'] == label %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <strong>Expertise:</strong>
+            <select name="expertise_label">
+                {% for label in t2nn_labels %}
+                    <option value="{{ label }}" {% if user['expertise_label'] == label %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </p>
+        <button type="submit">Update Info</button>
+    </form>
+
+    <div class="section">
+        <h3>Criterion Weights</h3>
+        <table>
+            <tr>
+                <th>Criterion</th>
+                <th>Fuzzy Label</th>
+            </tr>
+            {% for row in weights %}
+            <tr>
+                <td>{{ row['criterion'] }}</td>
+                <td>{{ row['fuzzy_label'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Alternative Evaluations</h3>
+        {% for alt in alternatives %}
+        <table>
+            <tr>
+                <th colspan="2">{{ alt }}</th>
+            </tr>
+            <tr>
+                <th>Criterion</th>
+                <th>Fuzzy Label</th>
+            </tr>
+            {% for row in evals %}
+                {% if row['alternative'] == alt %}
+                <tr>
+                    <td>{{ row['criterion'] }}</td>
+                    <td>{{ row['fuzzy_label'] }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+        {% endfor %}
+    </div>
+
+    <div style="clear:both; margin-top: 30px;">
+        <a href="{{ url_for('admin_panel') }}">← Back to Admin Panel</a>
+    </div>
+</body>
+</html>

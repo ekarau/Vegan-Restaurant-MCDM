@@ -1,0 +1,135 @@
+<!-- templates/admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <h2 class="text-center mb-4 text-primary">🔧 Admin Panel – Evaluator Overview</h2>
+
+    <!-- Registered Evaluators -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header fw-semibold bg-primary text-white">Registered Evaluators</div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped table-sm align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Experience (Years)</th>
+                        <th>Experience Level</th>
+                        <th>Expertise</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.experience_years }}</td>
+                        <td>{{ user.experience_label }}</td>
+                        <td>{{ user.expertise_label }}</td>
+                        <td><a href="{{ url_for('view_user', user_id=user['id']) }}">View Data</a></td>
+                        <td>
+                            <a href="/delete_user/{{ user.id }}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="text-center mb-3">
+        <a href="{{ url_for('view_tables') }}" class="btn btn-outline-primary btn-sm mt-2">📊 View All Intermediate Tables</a>
+        <a href="/result" class="btn btn-outline-success btn-lg">📊 View All Results</a>
+    </div>
+    <div class="text-center">
+        <a href="/" class="btn btn-outline-secondary">⬅ Back to Home</a>
+    </div>
+    <!-- Add New Criterion -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header fw-semibold bg-info text-white">Add New Criterion</div>
+        <div class="card-body">
+            <form action="/admin-add" method="POST" class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Criterion Name</label>
+                    <input type="text" name="new_criterion" class="form-control" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Type</label>
+                    <select name="criterion_type" class="form-select">
+                        <option value="Benefit">Benefit</option>
+                        <option value="Cost">Cost</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Add New Alternative -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header fw-semibold bg-warning text-dark">Add New Alternative</div>
+        <div class="card-body">
+            <form action="/admin-add" method="POST" class="row g-3">
+                <div class="col-md-10">
+                    <label class="form-label">Alternative Name</label>
+                    <input type="text" name="new_alternative" class="form-control" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row section mb-4">
+        <!-- Criteria with Type Edit -->
+        <div class="col-md-6">
+            <h5 class="text-muted">Current Criteria</h5>
+            <ul class="list-group">
+                {% for crit in criteria %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>{{ crit.name }}</strong>
+                        <form method="POST" action="{{ url_for('update_criterion_type', criterion_id=crit.id) }}" class="d-flex align-items-center gap-2">
+                            <select name="criterion_type" class="form-select form-select-sm w-auto">
+                                <option value="Benefit" {% if crit.type == "Benefit" %}selected{% endif %}>Benefit</option>
+                                <option value="Cost" {% if crit.type == "Cost" %}selected{% endif %}>Cost</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-outline-success">💾</button>
+                        </form>
+                        <form method="POST" action="/delete_criterion/{{ crit.id }}" onsubmit="return confirm('Delete this criterion?')">
+                            <button class="btn btn-sm btn-outline-danger ms-2">🗑️</button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- Alternatives -->
+        <div class="col-md-6">
+            <h5 class="text-muted">Current Alternatives</h5>
+            <ul class="list-group">
+                {% for alt in alternatives %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ alt.name }}
+                    <form method="POST" action="/delete_alternative/{{ alt.id }}" onsubmit="return confirm('Delete this alternative?')">
+                        <button class="btn btn-sm btn-outline-danger">🗑️</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!-- templates/evaluate.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IF-AROMAN Evaluation Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-section { margin-bottom: 2.5rem; }
+        .question-block { background: #fff; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .question-title { font-weight: 600; margin-bottom: 1rem; }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <h1 class="text-center mb-5 text-success">🍃 IF-AROMAN Evaluation Form</h1>
+
+    <form method="POST">
+        <div class="form-section">
+            <h4 class="mb-4">Evaluator Information</h4>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="experience" class="form-label">Experience (Years)</label>
+                <input type="number" class="form-control" id="experience" name="experience" required>
+            </div>
+            <div class="mb-3">
+                <label for="expertise" class="form-label">Expertise Level</label>
+                <select class="form-select" name="expertise" id="expertise" required>
+                    {% for level in t2nn_options %}
+                    <option value="{{ level }}">{{ level }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h4 class="mb-4">Criterion Evaluations</h4>
+            {% for crit in criteria %}
+            <div class="question-block">
+                <div class="question-title">{{ crit.replace('_', ' ') }}</div>
+                {% for label in fuzzy_labels %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="{{ crit }}" value="{{ label }}" id="{{ crit }}_{{ label }}" required>
+                    <label class="form-check-label" for="{{ crit }}_{{ label }}">
+                        {{ label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-section">
+            <h4 class="mb-4">Alternative Evaluations</h4>
+            {% for alt in alternatives %}
+            <div class="mb-4">
+                <h5 class="text-primary">{{ alt }}</h5>
+                {% for crit in criteria %}
+                <div class="question-block">
+                    <div class="question-title">{{ crit.replace('_', ' ') }}</div>
+                    {% for label in fuzzy_labels %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="{{ alt }}_{{ crit }}" value="{{ label }}" id="{{ alt }}_{{ crit }}_{{ label }}" required>
+                        <label class="form-check-label" for="{{ alt }}_{{ crit }}_{{ label }}">
+                            {{ label }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success px-4 py-2">Submit Evaluation</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

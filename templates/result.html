@@ -1,0 +1,37 @@
+<!-- templates/result_all.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <h2 class="text-center text-success mb-4">
+        🏆 Best Alternative: <span class="text-primary">{{ best_alt }}</span>
+    </h2>
+
+    <table class="table table-bordered table-striped text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Alternative</th>
+                <th>Score (R<sub>i</sub>)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alt, score in scores %}
+            <tr>
+                <td>{{ alt }}</td>
+                <td>{{ "%.4f"|format(score) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a href="/admin" class="btn btn-outline-secondary">⬅ Back to Admin Panel</a>
+    </div>
+</div>
+</body>
+</html>
