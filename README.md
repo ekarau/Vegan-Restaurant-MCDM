@@ -1,5 +1,5 @@
 # Vegan-Restaurant-MCDM
-You can run the website by typing python3 app.py in the terminal.
+You can run the website by typing python3 app.py in the terminal..
 
 This web application evaluates vegan restaurants using the IF-AROMAN multi-criteria decision-making method.
 
